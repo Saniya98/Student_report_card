@@ -1,0 +1,128 @@
+using namespace std;
+
+int main() {
+     // subject(); // submarks(); }void student::putdata() { 
+ cout<<"\nThe usn:"<< usn<<endl; cout<<"\nThe name:"<<name<<endl; 
+ cout<<"\nSemester:"<<sem<<endl; cout<<"\nAge:\n"<<age<<endl; 
+ cout<<"\nSub1\tSub2\tSub3\tSub4\tSub5\tSub6\tSub7\tSub8\ n"; 
+ cout<<"\n"<<m1<<"\t"<<m2<<"\t"<<m3<<"\t"<<m4<<"\t"<<m5<< "\t"<<m6<<"\t"<<m7<<"\t"<<m8<<"\n"; 
+} 
+void student::insert() 
+{ 
+    ofstream index("index.txt",ios::app);
+    ofstream rec("record.txt",ios::app); 
+    getdata(); 
+    index<<usn<<"|"<<++globalRRN<<"\n"; 
+    pack(); 
+    rec<<buffer; 
+    index.close();
+    rec.close(); 
+    sortindexfile(); 
+    }
+void student::display()
+    { 
+    ifstream index("index.txt"); 
+    ifstream rec("record.txt"); 
+    char _usn[15],_rrn[10]; 
+    int pos; 
+    while(!index.eof())
+    { 
+    index.getline(_usn,20,'|'); 
+    if(index.fail()) 
+    break; 
+    index.getline(_rrn,10,'\n');
+    pos=atoi(_rrn); 
+    rec.seekg((pos-1)*(size+1),ios::beg); 
+    rec.getline(buffer,size+1,'\n'); 
+    if(rec.fail()) 
+    break; 
+    unpack(); 
+    if(strcmp(_usn,usn)==0)
+    { 
+    putdata(); 
+    }
+    }
+index.close(); 
+rec.close(); 
+    }
+void student::search(char *key)
+{ 
+    ifstream index("index.txt"); 
+    ifstream rec("record.txt"); 
+    char _name[20],_usn[15],_rrn[10]; 
+    int pos,count=0; 
+    while(!index.eof()) { 
+    index.getline(_usn,20,'|'); 
+    if(index.fail()) 
+    break; 
+    index.getline(_rrn,10,'\n');
+    pos=atoi(_rrn); 
+    if(strcmp(_usn,key)!=0) 
+    continue;
+    rec.seekg((pos-1)*(size+1),ios::beg); 
+    rec.getline(buffer,size+1,'\n'); 
+    unpack(); 
+    if(strcmp(_usn,usn)==0)
+    { 
+    putdata(); 
+    count++;
+    } 
+    }
+    if(count==0) cout<<"not found";
+    index.close();
+    rec.close();
+    }
+void student::delete(char *key)
+        { 
+    ifstream rec("record.txt");
+    ofstream temp("temp.txt"); 
+    int count=0; 
+    while(!rec.eof())
+    { 
+    rec.getline(buffer,size+1,'\n');
+    if(rec.fail()) 
+    break;
+    unpack(); 
+    if(strcmp(usn,key)==0)
+    { 
+    strcpy(usn,"*"); 
+    count++; 
+        }
+        pack();
+        if(!rec.fail()) 
+    temp<<buffer; 
+        }
+        if(count==0) 
+    cout<<"not found"; 
+    rec.close(); 
+    temp.close(); 
+    remove("record.txt");
+    rename("temp.txt","record.txt"); 
+            }
+int main() 
+            { 
+    int choice;
+    student s; 
+    char key[15]; 
+    clrscr();
+    ofstream index("index.txt"); 
+    //index.close(); 
+    ofstream rec("record.txt"); 
+    //rec.close(); 
+    while(1) 
+    {
+        cout<<"\n Enter the choice:"<<endl; 
+    cout<<"\n1.insert 2.display 3.search 4.delete 5.exit"<<endl;cin>>choice; 
+    switch(choice) 
+    { 
+    case 1: s.insert(); 
+    cout<<"done"<<endl; break; case 2: cout<<"contents are"<<endl; 
+    s.display();
+    cout<<"done"<<endl;
+    break;
+    case 3: cout<<"enter the key usn:"; 
+    cin>>key; s.search(key); cout<<"done"<<endl; break; case 4: cout<<"enter the usn to delete:"; 
+    cin>>key; s.delet(key); cout<<"done"<<endl; break; default:return 0; } } } 
+	// your code goes here
+	return 0;
+}
